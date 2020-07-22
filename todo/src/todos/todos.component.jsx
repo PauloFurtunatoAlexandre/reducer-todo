@@ -14,6 +14,7 @@ const Todos = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setNewTodos("");
   };
 
   return (
