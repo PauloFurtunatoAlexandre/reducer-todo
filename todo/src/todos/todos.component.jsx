@@ -39,7 +39,14 @@ const Todos = () => {
           </button>
         </form>
       </div>
-      <div className="current-todos">{state.item}</div>
+      <div className="current-todos">
+        <ul>
+          {state.map((todo) => {
+            return <li key={todo.id}>{todo.item}</li>;
+          })}
+        </ul>
+        {console.log(state)}
+      </div>
     </div>
   );
 };
