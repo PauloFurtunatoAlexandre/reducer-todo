@@ -1,62 +1,63 @@
 import React, { useState, useReducer } from "react";
-
 import {
-  ADD_TODO,
   todoReducer,
   initialState,
+  ADD_TODO,
+  TOGGLE_COMPLETED,
+  CLEAR_COMPLETED,
 } from "../reducers/todoReducer";
 
+import TodoForm from "../todoform/todo-form.component";
 import TodoItem from "../todoItem/todo-item.component";
 
-import "./todos.style.scss";
-
 const Todos = () => {
-  const [newTodos, setNewTodos] = useState("");
+  const [newTodo, setNewTodo] = useState("");
   const [state, dispatch] = useReducer(todoReducer, initialState);
 
-  const handleChange = (e) => {
-    setNewTodos(e.target.value);
+  const handleChanges = (e) => {
+    setNewTodo(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const newTodoSubmit = (e) => {
     e.preventDefault();
-    dispatch({
-      type: ADD_TODO,
-      payload: newTodos,
-    });
-    setNewTodos("");
+
+    if (newTodo.length > 3) {
+      dispatch({
+        type: ADD_TODO,
+        payload: newTodo,
+      });
+    }
+
+    setNewTodo("");
   };
 
   return (
-    <div className="todos-container">
-      {console.log(state)}
-      <div className="new-task">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            className="new-todos-input"
-            name="newTodos"
-            value={newTodos}
-            onChange={handleChange}
+    <div>
+      <TodoForm
+        handleChanges={handleChanges}
+        newTodoSubmit={newTodoSubmit}
+        newTodo={newTodo}
+      />
+
+      {state.map((todo) => {
+        return (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            completed={todo.completed}
+            itemCompleted={() => {
+              dispatch({
+                type: TOGGLE_COMPLETED,
+                id: todo.id,
+              });
+            }}
           />
-          <button>Add New Todo</button>
-        </form>
-      </div>
-      <div className="current-todos">
-        <ul>
-          {state.todos.map((todo) => {
-            return (
-              <TodoItem
-                state={state}
-                handleChange={handleChange}
-                item={todo.item}
-                key={todo.id}
-                dispatch={dispatch}
-              />
-            );
-          })}
-        </ul>
-      </div>
+        );
+      })}
+
+      <button onClick={() => dispatch({ type: CLEAR_COMPLETED })}>
+        Clear Completed
+      </button>
     </div>
   );
 };
