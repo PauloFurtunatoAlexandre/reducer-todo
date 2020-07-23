@@ -1,6 +1,6 @@
 import React, { useState, useReducer } from "react";
 
-import { todoReducer, initialState, ADD_TODO } from "../reducers/todoReducer";
+import { ADD_TODO, TOGGLE_COMPLETED, todoReducer, initialState } from "../reducers/todoReducer";
 
 import "./todos.style.scss";
 
@@ -17,6 +17,12 @@ const Todos = () => {
     setNewTodos("");
   };
 
+  const handleCompleted = (todo) => {
+    dispatch({
+      type: TOGGLE_COMPLETED,
+      id: todo.id,
+    });
+  };
   return (
     <div className="todos-container">
       <div className="new-task">
@@ -29,12 +35,12 @@ const Todos = () => {
             onChange={handleChange}
           />
           <button
-            onClick={() =>
-              dispatch({
-                type: ADD_TODO,
-                payload: newTodos,
-              })
-            }
+          onClick={() =>
+          dispatch({
+            type: ADD_TODO,
+            payload: newTodos,
+          })
+          }
           >
             Add New Todo
           </button>
@@ -43,7 +49,11 @@ const Todos = () => {
       <div className="current-todos">
         <ul>
           {state.map((todo) => {
-            return <li key={todo.id}>{todo.item}</li>;
+            return (
+              <li key={todo.id} onClick={handleCompleted}>
+                {todo.item}
+              </li>
+            );
           })}
         </ul>
         {console.log(state)}

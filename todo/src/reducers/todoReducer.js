@@ -14,6 +14,7 @@ export const initialState = [
 
 //actions
 export const ADD_TODO = "ADD_TODO";
+export const TOGGLE_COMPLETED = "TOGGLE_COMPLETED";
 
 //reducer
 export const todoReducer = (state, action) => {
@@ -25,6 +26,11 @@ export const todoReducer = (state, action) => {
         id: new Date(),
       };
       return [...state, newTask];
+    case "TOGGLE_COMPLETED":
+      return {
+        ...state,
+        completed: !state.completed,
+      };
     default:
       return state;
   }
