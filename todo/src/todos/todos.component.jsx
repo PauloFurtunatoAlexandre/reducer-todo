@@ -1,6 +1,12 @@
 import React, { useState, useReducer } from "react";
 
-import { ADD_TODO, TOGGLE_COMPLETED, todoReducer, initialState } from "../reducers/todoReducer";
+import {
+  ADD_TODO,
+  todoReducer,
+  initialState,
+} from "../reducers/todoReducer";
+
+import TodoItem from "../todoItem/todo-item.component";
 
 import "./todos.style.scss";
 
@@ -14,17 +20,16 @@ const Todos = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch({
+      type: ADD_TODO,
+      payload: newTodos,
+    });
     setNewTodos("");
   };
 
-  const handleCompleted = (todo) => {
-    dispatch({
-      type: TOGGLE_COMPLETED,
-      id: todo.id,
-    });
-  };
   return (
     <div className="todos-container">
+      {console.log(state)}
       <div className="new-task">
         <form onSubmit={handleSubmit}>
           <input
@@ -34,29 +39,23 @@ const Todos = () => {
             value={newTodos}
             onChange={handleChange}
           />
-          <button
-          onClick={() =>
-          dispatch({
-            type: ADD_TODO,
-            payload: newTodos,
-          })
-          }
-          >
-            Add New Todo
-          </button>
+          <button>Add New Todo</button>
         </form>
       </div>
       <div className="current-todos">
         <ul>
-          {state.map((todo) => {
+          {state.todos.map((todo) => {
             return (
-              <li key={todo.id} onClick={handleCompleted}>
-                {todo.item}
-              </li>
+              <TodoItem
+                state={state}
+                handleChange={handleChange}
+                item={todo.item}
+                key={todo.id}
+                dispatch={dispatch}
+              />
             );
           })}
         </ul>
-        {console.log(state)}
       </div>
     </div>
   );
